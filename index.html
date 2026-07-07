@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rukhsar Khan — Product Builder</title>
+<meta name="description" content="AI Product Manager building and shipping AI-native product prototypes across fintech, music, food-tech and health.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #12131A;
+    --surface: #1B1D28;
+    --surface-2: #23263380;
+    --line: #2C2F3F;
+    --accent: #4361EE;
+    --accent-soft: #4361EE22;
+    --signal: #F2A93B;
+    --text: #F5F6FA;
+    --muted: #8B8FA3;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{ color:inherit; text-decoration:none; }
+
+  .mono{ font-family:'JetBrains Mono', monospace; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+  }
+
+  /* background grid texture */
+  .grid-bg{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:64px 64px;
+    opacity:0.25;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 90%);
+  }
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 6vw;
+    background:rgba(18,19,26,0.75);
+    backdrop-filter: blur(12px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-logo{ font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:1.05rem; letter-spacing:-0.02em; }
+  .nav-logo span{ color:var(--accent); }
+  .nav-links{ display:flex; gap:28px; align-items:center; }
+  .nav-links a{ font-size:0.88rem; color:var(--muted); transition:color .2s; }
+  .nav-links a:hover{ color:var(--text); }
+  .nav-cta{
+    font-family:'JetBrains Mono', monospace; font-size:0.78rem;
+    border:1px solid var(--accent); color:var(--accent) !important;
+    padding:7px 14px; border-radius:6px;
+  }
+  .nav-cta:hover{ background:var(--accent-soft); }
+  @media (max-width: 720px){ .nav-links a:not(.nav-cta){ display:none; } }
+
+  /* ---------- HERO ---------- */
+  header.hero{
+    position:relative; z-index:1;
+    padding:110px 6vw 70px;
+    max-width:1200px; margin:0 auto;
+  }
+  .status-pill{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono', monospace; font-size:0.75rem;
+    color:var(--signal);
+    border:1px solid #F2A93B44; background:#F2A93B0F;
+    padding:6px 12px; border-radius:20px;
+    margin-bottom:28px;
+  }
+  .dot{
+    width:7px; height:7px; border-radius:50%; background:var(--signal);
+    box-shadow:0 0 0 0 rgba(242,169,59,0.6);
+    animation:pulse 2s infinite;
+  }
+  @keyframes pulse{
+    0%{ box-shadow:0 0 0 0 rgba(242,169,59,0.5); }
+    70%{ box-shadow:0 0 0 8px rgba(242,169,59,0); }
+    100%{ box-shadow:0 0 0 0 rgba(242,169,59,0); }
+  }
+  h1.hero-title{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:clamp(2.4rem, 6vw, 4.6rem);
+    line-height:1.04;
+    letter-spacing:-0.03em;
+    max-width:16ch;
+    margin:0 0 22px;
+  }
+  h1.hero-title .accent{ color:var(--accent); }
+  .hero-sub{
+    font-size:1.08rem; color:var(--muted); max-width:56ch; line-height:1.65;
+    margin-bottom:40px;
+  }
+  .hero-actions{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:64px; }
+  .btn-primary, .btn-ghost{
+    font-size:0.92rem; font-weight:500; padding:13px 22px; border-radius:8px;
+    display:inline-flex; align-items:center; gap:8px;
+    transition:transform .15s, background .15s, border-color .15s;
+  }
+  .btn-primary{ background:var(--accent); color:#fff; }
+  .btn-primary:hover{ transform:translateY(-2px); background:#3a56e0; }
+  .btn-ghost{ border:1px solid var(--line); color:var(--text); }
+  .btn-ghost:hover{ border-color:var(--muted); transform:translateY(-2px); }
+
+  /* stat strip - the signature element */
+  .stat-strip{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    border:1px solid var(--line);
+    border-radius:12px;
+    overflow:hidden;
+    background:var(--surface);
+  }
+  .stat{
+    padding:22px 20px;
+    border-right:1px solid var(--line);
+  }
+  .stat:last-child{ border-right:none; }
+  .stat-num{
+    font-family:'Space Grotesk', sans-serif; font-weight:700;
+    font-size:1.9rem; color:var(--text);
+  }
+  .stat-label{
+    font-family:'JetBrains Mono', monospace; font-size:0.7rem; color:var(--muted);
+    text-transform:uppercase; letter-spacing:0.04em; margin-top:4px;
+  }
+  @media (max-width:720px){
+    .stat-strip{ grid-template-columns:repeat(2,1fr); }
+    .stat:nth-child(2){ border-right:none; }
+  }
+
+  /* ---------- SECTION LABELS ---------- */
+  .section{ position:relative; z-index:1; max-width:1200px; margin:0 auto; padding:90px 6vw; }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace; font-size:0.78rem; color:var(--accent);
+    text-transform:uppercase; letter-spacing:0.08em; margin-bottom:14px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{ content:''; width:24px; height:1px; background:var(--accent); display:inline-block; }
+  .section-title{
+    font-family:'Space Grotesk', sans-serif; font-weight:600;
+    font-size:clamp(1.7rem, 3.4vw, 2.4rem); letter-spacing:-0.02em; margin:0 0 12px;
+  }
+  .section-desc{ color:var(--muted); max-width:60ch; line-height:1.6; margin-bottom:50px; }
+
+  /* ---------- PROJECT CARDS ---------- */
+  .project-grid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:22px; }
+  @media (max-width:900px){ .project-grid{ grid-template-columns:1fr; } }
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px;
+    display:flex; flex-direction:column;
+    transition:border-color .2s, transform .2s;
+    position:relative;
+  }
+  .card:hover{ border-color:#3a3e54; transform:translateY(-3px); }
+  .card-top{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; }
+  .card-tag{
+    font-family:'JetBrains Mono', monospace; font-size:0.68rem; color:var(--signal);
+    border:1px solid #F2A93B33; background:#F2A93B0D;
+    padding:4px 9px; border-radius:20px;
+  }
+  .live-badge{
+    display:flex; align-items:center; gap:6px;
+    font-family:'JetBrains Mono', monospace; font-size:0.68rem; color:#5CE08A;
+  }
+  .live-dot{ width:6px; height:6px; border-radius:50%; background:#5CE08A; animation:pulse2 2s infinite; }
+  @keyframes pulse2{ 0%{box-shadow:0 0 0 0 rgba(92,224,138,.5);} 70%{box-shadow:0 0 0 6px rgba(92,224,138,0);} 100%{box-shadow:0 0 0 0 rgba(92,224,138,0);} }
+
+  .card-title{ font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:1.25rem; margin:0 0 10px; letter-spacing:-0.01em; }
+  .card-tagline{ color:var(--signal); font-size:0.85rem; margin-bottom:12px; font-style:italic; }
+  .card-desc{ color:var(--muted); font-size:0.92rem; line-height:1.6; margin-bottom:18px; flex-grow:1; }
+
+  .stack-row{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+  .stack-chip{
+    font-family:'JetBrains Mono', monospace; font-size:0.68rem; color:var(--muted);
+    border:1px solid var(--line); padding:4px 9px; border-radius:6px;
+  }
+
+  .card-links{ display:flex; gap:10px; border-top:1px solid var(--line); padding-top:18px; }
+  .card-link{
+    flex:1; text-align:center; font-size:0.85rem; font-weight:500;
+    padding:10px 12px; border-radius:8px; transition:background .15s, color .15s;
+  }
+  .card-link.primary{ background:var(--accent); color:#fff; }
+  .card-link.primary:hover{ background:#3a56e0; }
+  .card-link.secondary{ border:1px solid var(--line); color:var(--muted); }
+  .card-link.secondary:hover{ color:var(--text); border-color:var(--muted); }
+
+  /* future project placeholder card */
+  .card.placeholder{
+    align-items:center; justify-content:center; text-align:center;
+    border-style:dashed; color:var(--muted);
+  }
+  .card.placeholder .plus{
+    font-family:'Space Grotesk', sans-serif; font-size:2rem; color:var(--accent); margin-bottom:8px;
+  }
+
+  /* ---------- ABOUT ---------- */
+  .about-grid{ display:grid; grid-template-columns:1.1fr 1fr; gap:50px; align-items:start; }
+  @media (max-width:850px){ .about-grid{ grid-template-columns:1fr; } }
+  .about-text p{ color:var(--muted); line-height:1.75; margin-bottom:16px; font-size:0.98rem; }
+  .about-text strong{ color:var(--text); font-weight:500; }
+
+  .skill-block{ margin-bottom:22px; }
+  .skill-block h4{
+    font-family:'JetBrains Mono', monospace; font-size:0.72rem; color:var(--accent);
+    text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px;
+  }
+  .skill-chips{ display:flex; flex-wrap:wrap; gap:8px; }
+  .skill-chips span{
+    font-size:0.82rem; background:var(--surface); border:1px solid var(--line);
+    padding:7px 13px; border-radius:20px; color:var(--text);
+  }
+
+  /* ---------- CONTACT ---------- */
+  .contact-box{
+    background:var(--surface); border:1px solid var(--line); border-radius:16px;
+    padding:50px 6vw; text-align:center;
+  }
+  .contact-title{
+    font-family:'Space Grotesk', sans-serif; font-weight:700;
+    font-size:clamp(1.8rem, 4vw, 2.6rem); margin-bottom:16px; letter-spacing:-0.02em;
+  }
+  .contact-sub{ color:var(--muted); margin-bottom:28px; }
+  .contact-details{
+    display:flex; justify-content:center; gap:24px; flex-wrap:wrap;
+    margin-bottom:32px;
+  }
+  .contact-detail{
+    display:flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono', monospace; font-size:0.88rem;
+    color:var(--text); border:1px solid var(--line);
+    padding:10px 16px; border-radius:8px; background:var(--bg);
+    transition:border-color .2s, color .2s;
+  }
+  .contact-detail:hover{ border-color:var(--accent); color:var(--accent); }
+  .contact-icon{ color:var(--signal); }
+  .contact-links{ display:flex; justify-content:center; gap:14px; flex-wrap:wrap; }
+
+  footer{
+    text-align:center; padding:36px 6vw; color:var(--muted);
+    font-family:'JetBrains Mono', monospace; font-size:0.76rem;
+    border-top:1px solid var(--line);
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<nav>
+  <div class="nav-logo">RUKHSAR<span>.KHAN</span></div>
+  <div class="nav-links">
+    <a href="#work">Work</a>
+    <a href="#about">About</a>
+    <a href="#contact" class="nav-cta">Get in touch →</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="status-pill"><span class="dot"></span> ALL SYSTEMS DEPLOYED · 7/7 LIVE</div>
+  <h1 class="hero-title">I don't just plan products —<br><span class="accent">I ship them.</span></h1>
+  <p class="hero-sub">Product manager building AI-native prototypes end-to-end — reasoning layers, RAG chatbots, and review-analysis engines — across fintech, music, food-tech, and health. Every project below is live, not a mockup.</p>
+  <div class="hero-actions">
+    <a href="#work" class="btn-primary">View live projects ↓</a>
+    <a href="#contact" class="btn-ghost">Let's talk</a>
+  </div>
+  <div class="stat-strip" id="stats">
+    <div class="stat"><div class="stat-num">7</div><div class="stat-label">Products shipped</div></div>
+    <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Live &amp; deployed</div></div>
+    <div class="stat"><div class="stat-num">4</div><div class="stat-label">Domains covered</div></div>
+    <div class="stat"><div class="stat-num">98%</div><div class="stat-label">Best RAG accuracy</div></div>
+  </div>
+</header>
+
+<section class="section" id="work">
+  <div class="eyebrow">Selected work</div>
+  <h2 class="section-title">Live builds, not slideware</h2>
+  <p class="section-desc">Each card links straight to the deployed product first — the code is one click behind it for anyone who wants to see how it's built.</p>
+  <div class="project-grid" id="project-grid"></div>
+</section>
+
+<section class="section" id="about">
+  <div class="eyebrow">About</div>
+  <h2 class="section-title">From Seller Support to AI Product Management</h2>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>I'm a <strong>Seller Support Associate at Amazon</strong>, with 3.5+ years across Payments, Merchant Investigations, and Customer Service — which is where I learned to spot broken user experiences up close, at scale, every day.</p>
+      <p>I'm now completing the <strong>AI Product Management Fellowship at NextLeap</strong>, and instead of stopping at case studies, I've been shipping working AI products end-to-end — from problem validation and surveys, to prompting and API integration, to a deployed URL a reviewer can actually click.</p>
+      <p>I'm based in <strong>Bhubaneswar, India</strong>, open to relocation, and actively looking for APM and adjacent PM roles across fintech, operations, and AI-native product companies.</p>
+    </div>
+    <div>
+      <div class="skill-block">
+        <h4>Product</h4>
+        <div class="skill-chips">
+          <span>Problem validation</span><span>User research</span><span>PRDs</span><span>North Star metrics</span><span>Prioritization</span>
+        </div>
+      </div>
+      <div class="skill-block">
+        <h4>AI / Technical</h4>
+        <div class="skill-chips">
+          <span>RAG systems</span><span>Prompt engineering</span><span>Groq API</span><span>n8n automation</span><span>Vector DBs</span>
+        </div>
+      </div>
+      <div class="skill-block">
+        <h4>Build</h4>
+        <div class="skill-chips">
+          <span>React / Vite</span><span>FastAPI</span><span>Vercel</span><span>GitHub</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="contact">
+  <div class="contact-box">
+    <div class="contact-title">Building something? Let's talk.</div>
+    <p class="contact-sub">Open to APM and PM roles across fintech, operations, and AI-native product companies.</p>
+    <div class="contact-details">
+      <a class="contact-detail" href="mailto:rukhsarkhan24081998@gmail.com">
+        <span class="contact-icon">✉</span> rukhsarkhan24081998@gmail.com
+      </a>
+      <a class="contact-detail" href="tel:+919608980374">
+        <span class="contact-icon">☎</span> +91 96089 80374
+      </a>
+    </div>
+    <div class="contact-links">
+      <a class="btn-primary" href="mailto:rukhsarkhan24081998@gmail.com">✉ Email me</a>
+      <a class="btn-ghost" href="https://www.linkedin.com/in/rukhsar-khan-1a8382120/" target="_blank">LinkedIn</a>
+      <a class="btn-ghost" href="https://github.com/Rukhsar24081998" target="_blank">GitHub</a>
+    </div>
+  </div>
+</section>
+
+<footer>© 2026 Rukhsar Khan · Built and deployed like everything above</footer>
+
+<script>
+/* ============================================================
+   PROJECT DATA — add a new project by adding one object here.
+   Required fields: tag, live (boolean), title, tagline, desc,
+   stack (array of strings), liveUrl, githubUrl
+   ============================================================ */
+const projects = [
+  {
+    tag: "AI Product · Music",
+    live: true,
+    title: "Spotify Discovery Companion",
+    tagline: "Spotify knows what you loved. This helps you find what's next.",
+    desc: "An AI-native reasoning layer on top of Spotify: describe your mood or activity and get a next-listen suggestion with a transparent explanation and a 30-second preview — instead of a black-box recommendation.",
+    stack: ["React", "Vite", "Groq API", "Spotify Web API"],
+    liveUrl: "https://spotify-discovery-companion.vercel.app/",
+    githubUrl: "https://github.com/Rukhsar24081998/spotify-discovery-companion"
+  },
+  {
+    tag: "Research · AI",
+    live: true,
+    title: "Spotify Discovery Review Engine",
+    tagline: "Why do users stop discovering new music? Ask 700+ reviews.",
+    desc: "Aggregates and analyzes 700+ real user reviews across 5 sources (App Store, Play Store, Reddit, Spotify Community, social) with Groq AI to answer six structured product-research questions, exportable to Markdown or PDF.",
+    stack: ["React", "Groq AI", "Vercel"],
+    liveUrl: "https://spotify-review-engine-one.vercel.app/",
+    githubUrl: "https://github.com/Rukhsar24081998/spotify-review-engine"
+  },
+  {
+    tag: "Fintech · RAG",
+    live: true,
+    title: "HDFC Mutual Fund FAQ Assistant",
+    tagline: "Instant, sourced answers about HDFC scheme details.",
+    desc: "A RAG chatbot answering scheme-specific questions — expense ratio, minimum SIP, exit load, fund manager, AUM — across five HDFC funds, backed by ChromaDB retrieval and Groq generation.",
+    stack: ["FastAPI", "ChromaDB", "Groq", "React"],
+    liveUrl: "https://rag-based-mutual-fund-faq-chatbot-pi.vercel.app/",
+    githubUrl: "https://github.com/Rukhsar24081998/RAG-based-Mutual-Fund-FAQ-Chatbot"
+  },
+  {
+    tag: "Fintech · RAG",
+    live: true,
+    title: "Groww RAG",
+    tagline: "Facts-only mutual fund answers. No advice, only citations.",
+    desc: "A RAG assistant purpose-built to answer factual mutual fund questions with citations from verified sources, while explicitly refusing investment advice. Retrieval accuracy improved from 72% to 98% through iteration.",
+    stack: ["RAG", "Groq", "Vector DB"],
+    liveUrl: "https://milestone-2-grow.vercel.app/",
+    githubUrl: "https://github.com/Rukhsar24081998/MILESTONE2-GROW"
+  },
+  {
+    tag: "Analytics · Automation",
+    live: true,
+    title: "Weekly App Review Pulse — Groww",
+    tagline: "2,000+ weekly reviews, distilled into one validated pulse.",
+    desc: "An automated pipeline that ingests weekly Play Store and App Store reviews for the Groww app and summarizes them into a validated, publish-ready pulse report on a recurring cadence.",
+    stack: ["n8n", "Automation", "Google Docs API"],
+    liveUrl: "https://weekly-pulse-grow.vercel.app/",
+    githubUrl: "https://github.com/Rukhsar24081998/Weekly_Pulse_Grow-"
+  },
+  {
+    tag: "Health · Fitness",
+    live: true,
+    title: "MacroMate",
+    tagline: "Build meals. Track macros. Hit your goals.",
+    desc: "A nutrition calculator powered by USDA FoodData Central — search ingredients, set quantities, and get calories and macronutrients calculated in under a minute. Built out of my own fitness-tracking routine.",
+    stack: ["React", "USDA FoodData Central API"],
+    liveUrl: "https://macro-mate-opal.vercel.app/",
+    githubUrl: "https://github.com/Rukhsar24081998/MacroMate"
+  },
+  {
+    tag: "Concept · Food-tech",
+    live: true,
+    title: "Zomato AI",
+    tagline: "Discover your next favorite meal.",
+    desc: "An AI recommendation-engine concept for restaurant discovery — personalized taste profiling, group recommendation logic, and real-time wait-time prediction, tailored to mood, location, and budget.",
+    stack: ["React", "Recommendation logic"],
+    liveUrl: "https://milestone1-zomato-zeta.vercel.app/",
+    githubUrl: "https://github.com/Rukhsar24081998/Milestone1-zomato"
+  }
+];
+
+const grid = document.getElementById('project-grid');
+
+projects.forEach(p => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <div class="card-top">
+      <span class="card-tag">${p.tag}</span>
+      ${p.live ? '<span class="live-badge"><span class="live-dot"></span>LIVE</span>' : ''}
+    </div>
+    <h3 class="card-title">${p.title}</h3>
+    <div class="card-tagline">${p.tagline}</div>
+    <p class="card-desc">${p.desc}</p>
+    <div class="stack-row">
+      ${p.stack.map(s => `<span class="stack-chip">${s}</span>`).join('')}
+    </div>
+    <div class="card-links">
+      <a class="card-link primary" href="${p.liveUrl}" target="_blank" rel="noopener">View live ↗</a>
+      <a class="card-link secondary" href="${p.githubUrl}" target="_blank" rel="noopener">Code</a>
+    </div>
+  `;
+  grid.appendChild(card);
+});
+
+// placeholder card hinting at future additions
+const placeholder = document.createElement('div');
+placeholder.className = 'card placeholder';
+placeholder.innerHTML = `<div class="plus">+</div><div>Next build in progress</div>`;
+grid.appendChild(placeholder);
+</script>
+
+</body>
+</html>
