@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delivery Partner Tipping — PRD Case Study | Rukhsar Khan</title>
+<meta name="description" content="Product requirement document for a delivery-partner tipping feature: competitor benchmarking, cross-app functional specs, edge cases, success metrics, and rollout roadmap.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #12131A;
+    --surface: #1B1D28;
+    --surface-2: #23263380;
+    --line: #2C2F3F;
+    --accent: #4361EE;
+    --accent-soft: #4361EE22;
+    --signal: #F2A93B;
+    --good: #5CE08A;
+    --text: #F5F6FA;
+    --muted: #8B8FA3;
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:'Inter', sans-serif; -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  a{ color:inherit; text-decoration:none; }
+  .mono{ font-family:'JetBrains Mono', monospace; }
+
+  .grid-bg{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:64px 64px; opacity:0.2;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 90%);
+  }
+
+  nav{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 6vw; background:rgba(18,19,26,0.75);
+    backdrop-filter: blur(12px); border-bottom:1px solid var(--line);
+  }
+  .nav-logo{ font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:1.05rem; letter-spacing:-0.02em; }
+  .nav-logo span{ color:var(--accent); }
+  .nav-back{ font-size:0.85rem; color:var(--muted); display:flex; align-items:center; gap:6px; }
+  .nav-back:hover{ color:var(--text); }
+
+  .wrap{ position:relative; z-index:1; max-width:960px; margin:0 auto; padding:0 6vw; }
+
+  header.hero{ padding:80px 0 50px; }
+  .tag-row{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:22px; }
+  .pill{
+    font-family:'JetBrains Mono', monospace; font-size:0.72rem;
+    border:1px solid #F2A93B44; background:#F2A93B0F; color:var(--signal);
+    padding:6px 12px; border-radius:20px;
+  }
+  .pill.blue{ border-color:#4361EE44; background:var(--accent-soft); color:var(--accent); }
+  h1{
+    font-family:'Space Grotesk', sans-serif; font-weight:700;
+    font-size:clamp(2rem, 5vw, 3.2rem); line-height:1.08; letter-spacing:-0.03em;
+    margin:0 0 18px; max-width:20ch;
+  }
+  .hero-sub{ font-size:1.05rem; color:var(--muted); max-width:62ch; line-height:1.65; margin-bottom:36px; }
+  .hero-actions{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:20px; }
+  .btn-primary, .btn-ghost{
+    font-size:0.9rem; font-weight:500; padding:12px 20px; border-radius:8px;
+    display:inline-flex; align-items:center; gap:8px; transition:transform .15s, background .15s, border-color .15s;
+  }
+  .btn-primary{ background:var(--accent); color:#fff; }
+  .btn-primary:hover{ transform:translateY(-2px); background:#3a56e0; }
+  .btn-ghost{ border:1px solid var(--line); color:var(--text); }
+  .btn-ghost:hover{ border-color:var(--muted); transform:translateY(-2px); }
+  .meta-line{ font-family:'JetBrains Mono', monospace; font-size:0.78rem; color:var(--muted); }
+
+  section{ padding:56px 0; border-top:1px solid var(--line); }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:var(--accent);
+    text-transform:uppercase; letter-spacing:0.08em; margin-bottom:14px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{ content:''; width:22px; height:1px; background:var(--accent); display:inline-block; }
+  h2{ font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:clamp(1.4rem, 2.6vw, 1.9rem); letter-spacing:-0.02em; margin:0 0 16px; }
+  h3{ font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:1.1rem; margin:28px 0 12px; color:var(--text); }
+  p{ color:var(--muted); line-height:1.7; font-size:0.98rem; margin:0 0 14px; }
+  ul{ color:var(--muted); line-height:1.75; padding-left:20px; margin:0 0 14px; }
+  li{ margin-bottom:6px; }
+  strong{ color:var(--text); font-weight:600; }
+
+  .callout{
+    background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--signal);
+    border-radius:10px; padding:20px 22px; margin:20px 0;
+  }
+  .callout p{ margin:0; color:var(--text); font-size:0.95rem; }
+
+  .table-wrap{ overflow-x:auto; border:1px solid var(--line); border-radius:12px; margin:18px 0; }
+  table{ width:100%; border-collapse:collapse; font-size:0.88rem; min-width:520px; }
+  th{
+    font-family:'JetBrains Mono', monospace; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.04em;
+    color:var(--accent); background:var(--surface); text-align:left; padding:12px 16px; border-bottom:1px solid var(--line);
+  }
+  td{ padding:14px 16px; border-bottom:1px solid var(--line); color:var(--muted); vertical-align:top; line-height:1.55; }
+  tr:last-child td{ border-bottom:none; }
+  td strong, td.strong{ color:var(--text); }
+  .ok{ color:var(--good); }
+  .no{ color:#E0615C; }
+
+  .feature-card{
+    background:var(--surface); border:1px solid var(--line); border-radius:12px;
+    padding:20px 22px; margin-bottom:16px;
+  }
+  .feature-card h4{
+    font-family:'Space Grotesk', sans-serif; font-size:1rem; margin:0 0 12px; color:var(--text);
+  }
+  .feature-row{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  @media (max-width:720px){ .feature-row{ grid-template-columns:1fr; } }
+  .feature-col-label{ font-family:'JetBrains Mono', monospace; font-size:0.68rem; color:var(--signal); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:6px; display:block; }
+  .feature-col p{ margin:0; font-size:0.9rem; }
+
+  .wireframe-block{ display:flex; gap:32px; align-items:flex-start; flex-wrap:wrap; }
+  .wireframe-img{ max-width:280px; width:100%; border-radius:16px; border:1px solid var(--line); box-shadow:0 20px 60px rgba(0,0,0,0.4); }
+  .wireframe-caption{ flex:1; min-width:240px; }
+
+  .priority-badge{
+    font-family:'JetBrains Mono', monospace; font-size:0.7rem; padding:3px 9px; border-radius:6px;
+    display:inline-block;
+  }
+  .p0{ background:#E0615C22; color:#E0615C; border:1px solid #E0615C44; }
+  .p1{ background:#F2A93B22; color:var(--signal); border:1px solid #F2A93B44; }
+
+  .footer-nav{ display:flex; justify-content:space-between; align-items:center; padding:50px 0 60px; flex-wrap:wrap; gap:16px; }
+  footer{
+    text-align:center; padding:36px 6vw; color:var(--muted);
+    font-family:'JetBrains Mono', monospace; font-size:0.76rem; border-top:1px solid var(--line);
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<nav>
+  <div class="nav-logo">RUKHSAR<span>.KHAN</span></div>
+  <a class="nav-back" href="index.html">← Back to portfolio</a>
+</nav>
+
+<div class="wrap">
+
+  <header class="hero">
+    <div class="tag-row">
+      <span class="pill blue">Product Strategy · Quick-commerce</span>
+      <span class="pill">NextLeap AI PM Fellowship</span>
+    </div>
+    <h1>Delivery Partner Tipping — PRD Case Study</h1>
+    <p class="hero-sub">A full product requirement document for a checkout-and-post-delivery tipping feature on blinzedu's hyperlocal delivery app — built to lift delivery partner take-home pay while giving customers a transparent, one-tap way to reward good service.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="https://deaf-lead-61405838.figma.site/" target="_blank" rel="noopener">Open interactive prototype ↗</a>
+      <a class="btn-ghost" href="index.html">← Back to all projects</a>
+    </div>
+    <div class="meta-line">Author: Rukhsar Khan (AI PM Fellow) · Program: NextLeap AI Product Manager Fellowship</div>
+  </header>
+
+  <section id="context">
+    <div class="eyebrow">01 · Context &amp; strategic objectives</div>
+    <h2>Why this feature matters</h2>
+    <p>Delivery partners form the foundational backbone of blinzedu's hyperlocal delivery network, operating in high-pressure environments to ensure orders reach customers within minutes. Given the grueling nature of outdoor logistics, unpredictable weather, and fluctuating traffic conditions, extra earnings significantly impact their daily livelihood and financial security.</p>
+    <p>A seamless tipping feature is a structural mechanism to augment partner incomes while letting appreciative customers reward exceptional service directly. This document covers the product strategy, competitor analysis, feature requirements, wireframes, success metrics, and execution roadmap to launch the feature by end of January.</p>
+    <h3>High-level objectives</h3>
+    <ul>
+      <li>Enhance delivery partner retention and satisfaction by directly increasing daily net take-home earnings.</li>
+      <li>Match industry standards set by primary competitors in the hyperlocal delivery landscape.</li>
+      <li>Build marketplace trust through an explicit, transparent mechanism guaranteeing 100% distribution of customer tips to delivery partners.</li>
+    </ul>
+  </section>
+
+  <section id="competition">
+    <div class="eyebrow">02 · Competitive benchmarking</div>
+    <h2>How Blinkit, Instamart, Zepto &amp; Dunzo handle tipping</h2>
+    <ul>
+      <li><strong>Blinkit</strong> — tipping on the order-tracking screen and post-delivery review card; low friction, but emphasized post-fulfillment.</li>
+      <li><strong>Instamart</strong> — tipping on the checkout screen right before payment, with conversational prompts and icons showing what the amount buys.</li>
+      <li><strong>Zepto</strong> — present on both cart checkout and live tracking, with bright badges highlighting 100% pass-through to the delivery agent.</li>
+      <li><strong>Dunzo</strong> — a horizontal scroll of fixed amounts at final payment summary, plus a custom input field.</li>
+    </ul>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Feature</th><th>Dunzo</th><th>Instamart</th><th>Zepto</th><th>Blinkit</th></tr>
+        <tr><td class="strong">Minimum tip</td><td>₹10</td><td>₹10</td><td>₹10</td><td>₹5</td></tr>
+        <tr><td class="strong">Maximum tip</td><td>₹100</td><td>₹1000</td><td>₹1000</td><td>₹500</td></tr>
+        <tr><td class="strong">Icons for purchases</td><td class="no">No</td><td class="ok">Yes (tea, snacks)</td><td class="no">No</td><td class="no">No</td></tr>
+        <tr><td class="strong">Post-delivery tipping</td><td class="no">No</td><td class="ok">Yes</td><td class="ok">Yes</td><td class="ok">Yes</td></tr>
+        <tr><td class="strong">100% transparency badge</td><td>Yes (text only)</td><td>Yes (icon + text)</td><td>Yes (bold banner)</td><td>Yes (text only)</td></tr>
+        <tr><td class="strong">Custom amount input</td><td class="ok">Yes</td><td class="ok">Yes</td><td class="ok">Yes</td><td class="no">No (fixed only)</td></tr>
+      </table>
+    </div>
+    <div class="callout">
+      <p><strong>Recommendation:</strong> implement checkout-stage tipping supplemented by post-delivery pop-ups, with configured amounts mapped to tangible purchase icons (₹10 for tea, ₹20 for a snack). This maximizes conversion by connecting real-world value to the tip amount, while an explicit transparency badge guaranteeing 100% pass-through builds trust and adoption.</p>
+    </div>
+  </section>
+
+  <section id="requirements">
+    <div class="eyebrow">03 · Multi-app functional requirements</div>
+    <h2>Three modules, one tipping ecosystem</h2>
+    <p>Execution spans three distinct modules: the customer-facing app, the delivery-partner-facing app, and the internal ops/finance admin panel.</p>
+
+    <h3>3.1 Customer-facing app</h3>
+    <div class="feature-card">
+      <h4>Tip amount options</h4>
+      <div class="feature-row">
+        <div class="feature-col"><span class="feature-col-label">Customer experience</span><p>Choose a tip amount on the checkout page, see icons of common items the amount buys, and get reassurance that tips go directly to the partner.</p></div>
+        <div class="feature-col"><span class="feature-col-label">Technical acceptance criteria</span><p>Amounts appear in ascending order and are backend-configurable, along with their icons. UI works across the top 25 Android and top 5 iOS devices. The tip section sits between "coupon code" and "payment details," headed "Thank your partner with a tip," with three horizontal tap targets (₹10 / ₹20 / ₹30) and a caption confirming 100% goes to the partner.</p></div>
+      </div>
+    </div>
+    <div class="feature-card">
+      <h4>Custom tip amount</h4>
+      <div class="feature-row">
+        <div class="feature-col"><span class="feature-col-label">Customer experience</span><p>Customers who had an exceptional experience can add a custom tip outside the preset options.</p></div>
+        <div class="feature-col"><span class="feature-col-label">Technical acceptance criteria</span><p>Tapping "custom" converts the section into a numeric input with a "₹" prefix and opens the native numeric keypad automatically. A guardrail rejects values above ₹500 or 100% of the order total (whichever is lower), showing inline error text: "Tip amount cannot exceed order total or ₹500."</p></div>
+      </div>
+    </div>
+    <div class="feature-card">
+      <h4>Post-delivery tipping prompt</h4>
+      <div class="feature-row">
+        <div class="feature-col"><span class="feature-col-label">Customer experience</span><p>Customers who skipped tipping at checkout but rate the delivery 4 or 5 stars get a contextual post-delivery modal.</p></div>
+        <div class="feature-col"><span class="feature-col-label">Technical acceptance criteria</span><p>The modal fires within 5 seconds of a 4- or 5-star rating, offers the same ₹10 / ₹20 / ₹30 presets, and triggers payment automatically via saved UPI or card tokens.</p></div>
+      </div>
+    </div>
+
+    <h3>3.2 Delivery partner-facing app</h3>
+    <div class="feature-card">
+      <h4>Post-delivery tip notification</h4>
+      <div class="feature-row">
+        <div class="feature-col"><span class="feature-col-label">Partner experience</span><p>Partners get positive reinforcement immediately after a customer tips them, motivating continued quality service.</p></div>
+        <div class="feature-col"><span class="feature-col-label">Technical acceptance criteria</span><p><strong>Anti-cherry-picking guardrail:</strong> the tip value stays hidden until order status becomes "Delivered," preventing partners from rejecting low- or zero-tip orders. On delivery, a push notification fires: "Great job! You earned a tip of ₹XX on your last order."</p></div>
+      </div>
+    </div>
+    <div class="feature-card">
+      <h4>Earnings ledger integration</h4>
+      <div class="feature-row">
+        <div class="feature-col"><span class="feature-col-label">Partner experience</span><p>Partners can check exact daily, weekly, and monthly tip breakdowns for transparent accounting.</p></div>
+        <div class="feature-col"><span class="feature-col-label">Technical acceptance criteria</span><p>A distinct "Customer Tips" line item appears under the Earnings Dashboard, calculated separately from base payouts, with a 0% platform fee deduction shown explicitly.</p></div>
+      </div>
+    </div>
+
+    <h3>3.3 Internal ops &amp; finance admin panel</h3>
+    <div class="feature-card">
+      <h4>Dynamic tip configuration</h4>
+      <div class="feature-row">
+        <div class="feature-col"><span class="feature-col-label">Internal admin experience</span><p>Ops teams can adjust preset values for seasonal shifts or hyper-local inflation.</p></div>
+        <div class="feature-col"><span class="feature-col-label">Technical acceptance criteria</span><p>A secure web dashboard lets admins change fixed values (e.g. ₹10 → ₹15) and map localized icons (e.g. a festival sweet) via a JSON-based CMS, with no app store update required.</p></div>
+      </div>
+    </div>
+    <div class="feature-card">
+      <h4>Automated settlement engine</h4>
+      <div class="feature-row">
+        <div class="feature-col"><span class="feature-col-label">Internal admin experience</span><p>Automated payouts ensure compliance and prevent manual ledger backlogs.</p></div>
+        <div class="feature-col"><span class="feature-col-label">Technical acceptance criteria</span><p>All tip transactions escrow into a separate account node. At 23:59:59 daily, the settlement pipeline aggregates each partner's tips and queues them for direct bank transfer via automated IMPS/UPI clearing rails.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="wireframe">
+    <div class="eyebrow">04 · UI wireframe — checkout core funnel</div>
+    <h2>Production-ready checkout layout</h2>
+    <div class="wireframe-block">
+      <img class="wireframe-img" src="assets/tipping-wireframe.png" alt="Checkout screen wireframe showing the tipping row with ₹10 / ₹20 / ₹30 presets and a custom amount option">
+      <div class="wireframe-caption">
+        <p>Exact hierarchical placement of the tipping row, the dynamic transparency card, and the native mobile keyboard invocation layer — mapped for a production handoff.</p>
+        <p>Fixed presets (₹10 Tea, ₹20 Snack, ₹30 Cold Drink) sit alongside a "Custom" option, above a persistent "100% of tips go directly to delivery partners" trust badge and the itemized bill summary.</p>
+        <a class="btn-primary" href="https://deaf-lead-61405838.figma.site/" target="_blank" rel="noopener">Interact with the high-fidelity Figma prototype ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="edge-cases">
+    <div class="eyebrow">05 · Edge cases &amp; exception handling</div>
+    <h2>What happens when things go wrong</h2>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Scenario</th><th>Expected system behavior</th></tr>
+        <tr><td class="strong">Order cancelled post-payment</td><td>Tip is fully refunded to the customer's original payment source along with the order value.</td></tr>
+        <tr><td class="strong">Order cancelled mid-transit</td><td>Tip is still paid to the partner (who already spent fuel/time); the customer is charged the tip as a cancellation-fee penalty.</td></tr>
+        <tr><td class="strong">Partner reassignment</td><td>If Partner A unassigns (e.g. vehicle breakdown) and Partner B completes the delivery, the escrow engine routes 100% of the tip to Partner B.</td></tr>
+        <tr><td class="strong">Partial order refund</td><td>If items are missing and a partial refund is issued, the tip remains untouched and fully committed to the partner.</td></tr>
+        <tr><td class="strong">Payment gateway timeout</td><td>If the tip micro-transaction times out on the backend, the order still processes normally; the tip is suppressed, the grand total adjusts down, and a non-blocking notice reads: "Tip processing failed; order placed successfully."</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section id="metrics">
+    <div class="eyebrow">06 · Success metrics framework</div>
+    <h2>How we'll know it's working</h2>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Metric</th><th>Definition</th><th>Target</th></tr>
+        <tr><td class="strong">Tipping adoption — orders</td><td>% of fulfilled orders containing a customer tip</td><td>5.0% of monthly orders</td></tr>
+        <tr><td class="strong">Tipping adoption — users</td><td>% of unique MAUs who tip at least once a month</td><td>10.0% of MAUs</td></tr>
+        <tr><td class="strong">Earnings impact — partners</td><td>% increase in average daily take-home earnings</td><td>2.0% average income growth</td></tr>
+        <tr><td class="strong">Average tip value</td><td>Total tip revenue ÷ total tipped orders</td><td>₹22.00 per tipped order</td></tr>
+        <tr><td class="strong">Guardrail — checkout abandonment</td><td>% of users dropping out of checkout after the tipping block appears</td><td>0.0% variance vs. baseline</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section id="roadmap">
+    <div class="eyebrow">07 · Prioritization &amp; release roadmap</div>
+    <h2>Rollout plan</h2>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Priority</th><th>Feature component</th><th>Impact</th><th>Effort</th><th>Timeline</th></tr>
+        <tr><td><span class="priority-badge p0">P0</span></td><td class="strong">Checkout fixed tipping options</td><td>High — drives immediate adoption at the core conversion funnel</td><td>Medium</td><td>Week 1</td></tr>
+        <tr><td><span class="priority-badge p0">P0</span></td><td class="strong">Partner payout integration</td><td>Critical — ensures legal, transparent, swift disbursement</td><td>Small</td><td>Week 1</td></tr>
+        <tr><td><span class="priority-badge p1">P1</span></td><td class="strong">Custom tip amount input</td><td>Medium — captures high-value outlier tips</td><td>Small</td><td>Week 2</td></tr>
+        <tr><td><span class="priority-badge p1">P1</span></td><td class="strong">Post-delivery tipping prompt</td><td>Medium — recovers missed tip conversions post-fulfillment</td><td>Medium</td><td>Week 3</td></tr>
+        <tr><td><span class="priority-badge p1">P1</span></td><td class="strong">Tipping history dashboard</td><td>Low — improves long-term transparency</td><td>Medium</td><td>Week 4</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <div class="footer-nav">
+    <a class="btn-ghost" href="index.html">← Back to all projects</a>
+    <a class="btn-primary" href="https://deaf-lead-61405838.figma.site/" target="_blank" rel="noopener">Open interactive prototype ↗</a>
+  </div>
+
+</div>
+
+<footer>© 2026 Rukhsar Khan · Built and deployed like everything else in this portfolio</footer>
+
+</body>
+</html>
