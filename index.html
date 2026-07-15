@@ -281,7 +281,7 @@
 </nav>
 
 <header class="hero">
-  <div class="status-pill"><span class="dot"></span> ALL SYSTEMS DEPLOYED · 7/7 LIVE</div>
+  <div class="status-pill"><span class="dot"></span> ALL SYSTEMS DEPLOYED · 8/8 SHIPPED</div>
   <h1 class="hero-title">I don't just plan products —<br><span class="accent">I ship them.</span></h1>
   <p class="hero-sub">Product manager building AI-native prototypes end-to-end — reasoning layers, RAG chatbots, and review-analysis engines — across fintech, music, food-tech, and health. Every project below is live, not a mockup.</p>
   <div class="hero-actions">
@@ -289,8 +289,8 @@
     <a href="#contact" class="btn-ghost">Let's talk</a>
   </div>
   <div class="stat-strip" id="stats">
-    <div class="stat"><div class="stat-num">7</div><div class="stat-label">Products shipped</div></div>
-    <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Live &amp; deployed</div></div>
+    <div class="stat"><div class="stat-num">8</div><div class="stat-label">Products shipped</div></div>
+    <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Live or prototyped</div></div>
     <div class="stat"><div class="stat-num">4</div><div class="stat-label">Domains covered</div></div>
     <div class="stat"><div class="stat-num">98%</div><div class="stat-label">Best RAG accuracy</div></div>
   </div>
@@ -433,6 +433,16 @@ const projects = [
     stack: ["React", "Recommendation logic"],
     liveUrl: "https://milestone1-zomato-zeta.vercel.app/",
     githubUrl: "https://github.com/Rukhsar24081998/Milestone1-zomato"
+  },
+  {
+    tag: "Product Strategy · Quick-commerce",
+    type: "case-study",
+    title: "Delivery Partner Tipping Feature",
+    tagline: "Turning customer gratitude into partner income — with 100% pass-through.",
+    desc: "A full PRD for a checkout + post-delivery tipping feature on a hyperlocal delivery app — competitor benchmarking, cross-app functional specs (customer, partner, ops/finance), edge-case handling, and a success-metrics framework, paired with a high-fidelity Figma prototype.",
+    stack: ["PRD", "Figma", "Wireframing", "NextLeap AI PM Fellowship"],
+    caseStudyUrl: "tipping-feature.html",
+    prototypeUrl: "https://deaf-lead-61405838.figma.site/"
   }
 ];
 
@@ -441,10 +451,19 @@ const grid = document.getElementById('project-grid');
 projects.forEach(p => {
   const card = document.createElement('div');
   card.className = 'card';
+  const isCaseStudy = p.type === 'case-study';
+  const badge = p.live ? '<span class="live-badge"><span class="live-dot"></span>LIVE</span>'
+              : isCaseStudy ? '<span class="card-tag" style="color:var(--accent);border-color:#4361EE33;background:var(--accent-soft);">CASE STUDY</span>'
+              : '';
+  const links = isCaseStudy
+    ? `<a class="card-link primary" href="${p.prototypeUrl}" target="_blank" rel="noopener">Try prototype ↗</a>
+       <a class="card-link secondary" href="${p.caseStudyUrl}">Read PRD</a>`
+    : `<a class="card-link primary" href="${p.liveUrl}" target="_blank" rel="noopener">View live ↗</a>
+       <a class="card-link secondary" href="${p.githubUrl}" target="_blank" rel="noopener">Code</a>`;
   card.innerHTML = `
     <div class="card-top">
       <span class="card-tag">${p.tag}</span>
-      ${p.live ? '<span class="live-badge"><span class="live-dot"></span>LIVE</span>' : ''}
+      ${badge}
     </div>
     <h3 class="card-title">${p.title}</h3>
     <div class="card-tagline">${p.tagline}</div>
@@ -453,8 +472,7 @@ projects.forEach(p => {
       ${p.stack.map(s => `<span class="stack-chip">${s}</span>`).join('')}
     </div>
     <div class="card-links">
-      <a class="card-link primary" href="${p.liveUrl}" target="_blank" rel="noopener">View live ↗</a>
-      <a class="card-link secondary" href="${p.githubUrl}" target="_blank" rel="noopener">Code</a>
+      ${links}
     </div>
   `;
   grid.appendChild(card);
