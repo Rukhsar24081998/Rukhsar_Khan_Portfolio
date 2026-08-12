@@ -435,7 +435,7 @@
 </nav>
 
 <header class="hero">
-  <div class="status-pill"><span class="dot"></span> ALL SYSTEMS DEPLOYED · 9/9 SHIPPED</div>
+  <div class="status-pill"><span class="dot"></span> ALL SYSTEMS DEPLOYED · 11/11 SHIPPED</div>
   <h1 class="hero-title">I don't just plan products —<br><span class="accent">I ship them.</span></h1>
   <p class="hero-sub">Product manager building AI-native prototypes end-to-end — reasoning layers, RAG chatbots, and review-analysis engines — across fintech, music, food-tech, and health. Every project below is live, not a mockup.</p>
   <a class="hero-achievement" href="https://lnkd.in/p/d-zV86fN" target="_blank" rel="noopener noreferrer" aria-label="Top Fellow recognition – NextLeap AI Product Management Fellowship">
@@ -451,7 +451,7 @@
     <a href="#contact" class="btn-ghost">Let's talk</a>
   </div>
   <div class="stat-strip" id="stats">
-    <div class="stat"><div class="stat-num">9</div><div class="stat-label">Products shipped</div></div>
+    <div class="stat"><div class="stat-num">11</div><div class="stat-label">Products shipped</div></div>
     <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Live or prototyped</div></div>
     <div class="stat"><div class="stat-num">4</div><div class="stat-label">Domains covered</div></div>
     <div class="stat"><div class="stat-num">98%</div><div class="stat-label">Best RAG accuracy</div></div>
@@ -602,6 +602,26 @@
    stack (array of strings), liveUrl, githubUrl
    ============================================================ */
 const projects = [
+  {
+    tag: "Hiring · Decision Intelligence",
+    live: true,
+    title: "DecisionReady AI",
+    tagline: "Evidence before opinion — hiring decisions stay human.",
+    desc: "An AI Decision Intelligence layer for recruiting: upload JDs, resumes, interview notes, and scorecards to get competency-mapped evidence, a Decision Readiness score, recruiter copilot with citations, and a printable Decision Brief — without automating hire/reject.",
+    stack: ["Next.js", "TypeScript", "Groq API", "Zod", "Vercel Blob"],
+    liveUrl: "https://decisionready-ai.vercel.app/",
+    githubUrl: "https://github.com/Rukhsar24081998/decisionready-ai"
+  },
+  {
+    tag: "Mobility · Maps",
+    live: true,
+    title: "RoadSense",
+    tagline: "Not just how long the trip takes — what the road will feel like.",
+    desc: "A road-quality intelligence layer on top of open navigation: plan any origin/destination, compare travel time vs pavement quality, and use Navigation Mode with live GPS progress and look-ahead alerts for poor or moderate road segments ahead.",
+    stack: ["Next.js", "TypeScript", "MapLibre", "OSRM", "OpenFreeMap"],
+    liveUrl: "https://road-sense-two.vercel.app/",
+    githubUrl: "https://github.com/Rukhsar24081998/RoadSense"
+  },
   {
     tag: "Health · AI",
     live: true,
