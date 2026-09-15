@@ -435,9 +435,9 @@
 </nav>
 
 <header class="hero">
-  <div class="status-pill"><span class="dot"></span> ALL SYSTEMS DEPLOYED · 11/11 SHIPPED</div>
+  <div class="status-pill"><span class="dot"></span> ALL SYSTEMS DEPLOYED · 12/12 SHIPPED</div>
   <h1 class="hero-title">I don't just plan products —<br><span class="accent">I ship them.</span></h1>
-  <p class="hero-sub">Product manager building AI-native prototypes end-to-end — reasoning layers, RAG chatbots, and review-analysis engines — across fintech, music, food-tech, and health. Every project below is live, not a mockup.</p>
+  <p class="hero-sub">Product manager building AI-native prototypes end-to-end — quality gates, reasoning layers, RAG chatbots, and review-analysis engines — across product ops, fintech, music, food-tech, and health. Every project below is live, not a mockup.</p>
   <a class="hero-achievement" href="https://lnkd.in/p/d-zV86fN" target="_blank" rel="noopener noreferrer" aria-label="Top Fellow recognition – NextLeap AI Product Management Fellowship">
     <span class="hero-achievement-icon" aria-hidden="true">🏆</span>
     <span class="hero-achievement-body">
@@ -451,9 +451,9 @@
     <a href="#contact" class="btn-ghost">Let's talk</a>
   </div>
   <div class="stat-strip" id="stats">
-    <div class="stat"><div class="stat-num">11</div><div class="stat-label">Products shipped</div></div>
+    <div class="stat"><div class="stat-num">12</div><div class="stat-label">Products shipped</div></div>
     <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Live or prototyped</div></div>
-    <div class="stat"><div class="stat-num">4</div><div class="stat-label">Domains covered</div></div>
+    <div class="stat"><div class="stat-num">5</div><div class="stat-label">Domains covered</div></div>
     <div class="stat"><div class="stat-num">98%</div><div class="stat-label">Best RAG accuracy</div></div>
   </div>
 </header>
@@ -527,7 +527,7 @@
       <div class="skill-block">
         <h4>Build</h4>
         <div class="skill-chips">
-          <span>React / Vite</span><span>FastAPI</span><span>Vercel</span><span>GitHub</span>
+          <span>Next.js</span><span>React / Vite</span><span>FastAPI</span><span>Vercel</span><span>GitHub</span>
         </div>
       </div>
     </div>
@@ -602,6 +602,16 @@
    stack (array of strings), liveUrl, githubUrl
    ============================================================ */
 const projects = [
+  {
+    tag: "Product Ops · AI Intake",
+    live: true,
+    title: "SpecTriage",
+    tagline: "A quality gate for messy stakeholder requests — not an AI ticket generator.",
+    desc: "An AI-native intake layer for Product Owners: paste a free-form message, separate multiple intents, extract only what was actually said, and run a deterministic Definition-of-Ready gate before any engineering draft is shown. The PO stays in control — nothing is sent or created in external systems.",
+    stack: ["Next.js", "TypeScript", "Groq API", "Zod", "Vercel"],
+    liveUrl: "https://spectriage-ai.vercel.app",
+    githubUrl: "https://github.com/Rukhsar24081998/SpecTriage"
+  },
   {
     tag: "Hiring · Decision Intelligence",
     live: true,
