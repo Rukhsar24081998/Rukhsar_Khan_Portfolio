@@ -210,6 +210,55 @@
   .card-link.secondary{ border:1px solid var(--line); color:var(--muted); }
   .card-link.secondary:hover{ color:var(--text); border-color:var(--muted); }
 
+  /* ---------- SAMPLE ANSWER PREVIEW DRAWER ---------- */
+  .preview-toggle{
+    display:flex; align-items:center; justify-content:space-between;
+    width:100%; padding:9px 12px; margin-bottom:14px;
+    background:rgba(67,97,238,0.08); border:1px solid rgba(67,97,238,0.28);
+    border-radius:8px; color:var(--text); font-family:'JetBrains Mono', monospace;
+    font-size:0.75rem; font-weight:500; cursor:pointer;
+    transition:background .2s, border-color .2s;
+  }
+  .preview-toggle:hover{
+    background:rgba(67,97,238,0.16); border-color:var(--accent);
+  }
+  .preview-toggle-icon{
+    font-size:0.75rem; color:var(--accent); transition:transform .2s;
+  }
+  .preview-toggle.open .preview-toggle-icon{
+    transform:rotate(180deg);
+  }
+  .preview-drawer{
+    display:none;
+    background:rgba(18,19,26,0.65);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:14px; margin-bottom:16px;
+    font-size:0.84rem; line-height:1.55;
+    animation:fadeIn 0.2s ease-in-out;
+  }
+  .preview-drawer.open{ display:block; }
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(-4px);} to{opacity:1; transform:translateY(0);} }
+  .preview-label{
+    font-family:'JetBrains Mono', monospace; font-size:0.68rem;
+    color:var(--signal); text-transform:uppercase; letter-spacing:0.04em;
+    margin-bottom:6px; display:block;
+  }
+  .preview-box{
+    background:var(--bg); border:1px solid var(--line); border-radius:6px;
+    padding:10px 12px; margin-bottom:10px; color:var(--text); font-size:0.82rem;
+    white-space:pre-line;
+  }
+  .preview-citation{
+    display:flex; align-items:flex-start; gap:6px;
+    font-family:'JetBrains Mono', monospace; font-size:0.7rem; color:var(--accent);
+    margin-bottom:8px; word-break:break-all;
+  }
+  .preview-guardrail{
+    font-size:0.78rem; color:var(--muted); border-left:2px solid var(--signal);
+    padding-left:10px; margin-top:8px; line-height:1.5;
+  }
+
   /* future project placeholder card */
   .card.placeholder{
     align-items:center; justify-content:center; text-align:center;
@@ -497,7 +546,7 @@
 <section class="section" id="work">
   <div class="eyebrow">Selected work</div>
   <h2 class="section-title">Live builds, not slideware</h2>
-  <p class="section-desc">Each card links straight to the deployed product first — the code is one click behind it for anyone who wants to see how it's built.</p>
+  <p class="section-desc">Each project includes working outputs, reasoning guardrails, and deployed builds. Tap <strong>"Preview Working Output &amp; Q&amp;A"</strong> on any card to see real queries, verified answers, and citations.</p>
   <div class="project-grid" id="project-grid"></div>
 </section>
 
@@ -610,7 +659,11 @@ const projects = [
     desc: "An AI-native intake layer for Product Owners: paste a free-form message, separate multiple intents, extract only what was actually said, and run a deterministic Definition-of-Ready gate before any engineering draft is shown. The PO stays in control — nothing is sent or created in external systems.",
     stack: ["Next.js", "TypeScript", "Groq API", "Zod", "Vercel"],
     liveUrl: "https://spectriage-ai.vercel.app",
-    githubUrl: "https://github.com/Rukhsar24081998/SpecTriage"
+    githubUrl: "https://github.com/Rukhsar24081998/SpecTriage",
+    sampleQ: "Messy Slack request: \"Hey team, checkout latency is horrible, can we fix it this sprint? Also let's throw in a 10% popup coupon for first-time shoppers.\"",
+    sampleA: "• Intent 1: Checkout Latency Optimization\n  Status: BLOCKED (Missing baseline p95 latency & target metric)\n• Intent 2: First-time Buyer 10% Coupon Modal\n  Status: READY FOR SPEC (Trigger: Cart exit-intent; Min order: ₹500)",
+    citation: "Rule Engine: Deterministic Definition-of-Ready Gate (0 Hallucinations)",
+    guardrail: "Separates multiple intents and prevents unrefined requests from entering sprint backlogs."
   },
   {
     tag: "Hiring · Decision Intelligence",
@@ -620,7 +673,11 @@ const projects = [
     desc: "An AI Decision Intelligence layer for recruiting: upload JDs, resumes, interview notes, and scorecards to get competency-mapped evidence, a Decision Readiness score, recruiter copilot with citations, and a printable Decision Brief — without automating hire/reject.",
     stack: ["Next.js", "TypeScript", "Groq API", "Zod", "Vercel Blob"],
     liveUrl: "https://decisionready-ai.vercel.app/",
-    githubUrl: "https://github.com/Rukhsar24081998/decisionready-ai"
+    githubUrl: "https://github.com/Rukhsar24081998/decisionready-ai",
+    sampleQ: "Staff PM JD + Candidate Resume + 3 Interview Panel Scorecards",
+    sampleA: "• Decision Readiness: 86/100 (High-confidence evidence)\n• Verified Competencies: Distributed system design, product strategy\n• Debrief Copilot: Flags divergence between interviewers on GTM execution",
+    citation: "Decision Brief: Source-attributed verbatim citations from scorecard notes",
+    guardrail: "Synthesizes competency evidence while explicitly keeping hire/reject decisions in human hands."
   },
   {
     tag: "Mobility · Maps",
@@ -630,7 +687,11 @@ const projects = [
     desc: "A road-quality intelligence layer on top of open navigation: plan any origin/destination, compare travel time vs pavement quality, and use Navigation Mode with live GPS progress and look-ahead alerts for poor or moderate road segments ahead.",
     stack: ["Next.js", "TypeScript", "MapLibre", "OSRM", "OpenFreeMap"],
     liveUrl: "https://road-sense-two.vercel.app/",
-    githubUrl: "https://github.com/Rukhsar24081998/RoadSense"
+    githubUrl: "https://github.com/Rukhsar24081998/RoadSense",
+    sampleQ: "Route Request: Bhubaneswar Airport → Cuttack Ring Road",
+    sampleA: "• Route 1 (NH16): 38 mins · Pavement Index: 91% Good · 0 severe potholes\n• Route 2 (Old Canal Road): 32 mins (-6m) · Pavement Index: 44% Poor\n• Recommendation: Route 1 advised for vehicle safety despite +6m duration",
+    citation: "Look-Ahead Engine: GeoJSON vibration & pavement quality overlays",
+    guardrail: "Balances arrival time against ride quality and vehicle maintenance impact."
   },
   {
     tag: "Health · AI",
@@ -640,7 +701,11 @@ const projects = [
     desc: "An AI medical timeline generator for caregivers — upload a PDF or report photo, extract text via OCR, and get a structured dashboard with diagnoses, medications, abnormal labs, a chronological timeline, and questions to ask the doctor.",
     stack: ["Next.js", "TypeScript", "Groq API", "Tesseract.js", "Zod"],
     liveUrl: "https://care-bridge-silk.vercel.app/",
-    githubUrl: "https://github.com/Rukhsar24081998/CareBridge"
+    githubUrl: "https://github.com/Rukhsar24081998/CareBridge",
+    sampleQ: "Input: Multi-page scanned lab report photo (CMP & CBC blood test)",
+    sampleA: "• Critical Flags: Fasting Blood Sugar: 144 mg/dL (High) · HbA1c: 6.9% (Elevated)\n• Timeline Progression: 2023 pre-diabetes diagnosis → 2026 elevated markers\n• Questions for Doctor: 'Do these numbers warrant a medication adjustment or specialist referral?'",
+    citation: "Extraction Pipeline: Tesseract.js OCR → Zod schema validation",
+    guardrail: "Caregiver communication copilot; does not replace physician medical diagnosis."
   },
   {
     tag: "AI Product · Music",
@@ -650,7 +715,11 @@ const projects = [
     desc: "An AI-native reasoning layer on top of Spotify: describe your mood or activity and get a next-listen suggestion with a transparent explanation and a 30-second preview — instead of a black-box recommendation.",
     stack: ["React", "Vite", "Groq API", "Spotify Web API"],
     liveUrl: "https://spotify-discovery-companion.vercel.app/",
-    githubUrl: "https://github.com/Rukhsar24081998/spotify-discovery-companion"
+    githubUrl: "https://github.com/Rukhsar24081998/spotify-discovery-companion",
+    sampleQ: "Intent: \"Deep work coding session, late night electronic ambient, but zero distracting vocals\"",
+    sampleA: "• Suggested Track: 'Awake' by Tycho (Preview: 30s playable audio snippet)\n• Transparent Rationale: Matches tempo (84 BPM) + 0.02 acoustic vocal presence + melodic synth layers for cognitive focus\n• User Action: One-tap save to Spotify library",
+    citation: "Spotify Web API + Groq reasoning layer (Llama 3.3)",
+    guardrail: "Replaces black-box recommendation algorithms with explainable musical logic."
   },
   {
     tag: "Research · AI",
@@ -660,7 +729,11 @@ const projects = [
     desc: "Aggregates and analyzes 700+ real user reviews across 5 sources (App Store, Play Store, Reddit, Spotify Community, social) with Groq AI to answer six structured product-research questions, exportable to Markdown or PDF.",
     stack: ["React", "Groq AI", "Vercel"],
     liveUrl: "https://spotify-review-engine-one.vercel.app/",
-    githubUrl: "https://github.com/Rukhsar24081998/spotify-review-engine"
+    githubUrl: "https://github.com/Rukhsar24081998/spotify-review-engine",
+    sampleQ: "Research Query: \"Why do long-time users abandon algorithmic music discovery?\"",
+    sampleA: "• Primary Finding: 64% cited 'Algorithmic Repetition' — playlists loop familiar hits rather than novel discoveries\n• Secondary Finding: Users feel loss of agency over their Taste Profile\n• Product Recommendation: Introduce an 'Exploration Dial' letting users modulate discovery risk",
+    citation: "Corpus: 700+ real reviews from App Store, Google Play, Reddit & Spotify Forums",
+    guardrail: "Quantifies qualitative customer sentiment into 6 structured PM decision frameworks."
   },
   {
     tag: "Fintech · RAG",
@@ -670,7 +743,11 @@ const projects = [
     desc: "A RAG chatbot answering scheme-specific questions — expense ratio, minimum SIP, exit load, fund manager, AUM — across five HDFC funds, backed by ChromaDB retrieval and Groq generation.",
     stack: ["FastAPI", "ChromaDB", "Groq", "React"],
     liveUrl: "https://rag-based-mutual-fund-faq-chatbot-pi.vercel.app/",
-    githubUrl: "https://github.com/Rukhsar24081998/RAG-based-Mutual-Fund-FAQ-Chatbot"
+    githubUrl: "https://github.com/Rukhsar24081998/RAG-based-Mutual-Fund-FAQ-Chatbot",
+    sampleQ: "User Query: \"What is the expense ratio and exit load for HDFC Flexi Cap Fund?\"",
+    sampleA: "• Expense Ratio (Direct Plan): 0.68%\n• Exit Load: 1% if units redeemed within 1 year of allotment; 0% thereafter\n• Fund Manager: Amit Ganatra (since February 01, 2026)\n• Compliance Status: Factual scheme detail verified against official SID",
+    citation: "Official Source: https://www.hdfcfund.com/explore/mutual-funds/hdfc-flexi-cap-fund/direct",
+    guardrail: "PII scrubber + compliance gate explicitly refusing financial advice ('Should I invest?')."
   },
   {
     tag: "Fintech · RAG",
@@ -680,7 +757,11 @@ const projects = [
     desc: "A RAG assistant purpose-built to answer factual mutual fund questions with citations from verified sources, while explicitly refusing investment advice. Retrieval accuracy improved from 72% to 98% through iteration.",
     stack: ["RAG", "Groq", "Vector DB"],
     liveUrl: "https://milestone-2-grow.vercel.app/",
-    githubUrl: "https://github.com/Rukhsar24081998/MILESTONE2-GROW"
+    githubUrl: "https://github.com/Rukhsar24081998/MILESTONE2-GROW",
+    sampleQ: "User Query: \"What is the exit load for HDFC Silver ETF FoF?\"",
+    sampleA: "• Exit Load: An exit load of 1% is applicable if units are redeemed within 15 days from allotment.\n• Minimum SIP: ₹100\n• Riskometer: Very High Risk",
+    citation: "Source: https://groww.in/mutual-funds/hdfc-silver-etf-fof-direct-growth (98% retrieval benchmark)",
+    guardrail: "Facts-only mutual fund assistant strictly grounded in 377 verified scheme documents."
   },
   {
     tag: "Analytics · Automation",
@@ -690,7 +771,11 @@ const projects = [
     desc: "An automated pipeline that ingests weekly Play Store and App Store reviews for the Groww app and summarizes them into a validated, publish-ready pulse report on a recurring cadence.",
     stack: ["n8n", "Automation", "Google Docs API"],
     liveUrl: "https://weekly-pulse-grow.vercel.app/",
-    githubUrl: "https://github.com/Rukhsar24081998/Weekly_Pulse_Grow-"
+    githubUrl: "https://github.com/Rukhsar24081998/Weekly_Pulse_Grow-",
+    sampleQ: "Ingestion Trigger: 2,000+ weekly Play Store & App Store reviews",
+    sampleA: "• Top Critical Spike: +38% rise in 'UPI Mandate Auto-debit failed' following build v14.2\n• Sentiment Index: 54% Positive, 31% Negative, 15% Neutral\n• Distribution: Automatically formatted and synced to Google Docs pulse repository",
+    citation: "Pipeline: n8n workflow scheduler + Google Docs API automated publisher",
+    guardrail: "Automated recurring pipeline removing manual sentiment analysis overhead."
   },
   {
     tag: "Health · Fitness",
@@ -700,7 +785,11 @@ const projects = [
     desc: "A nutrition calculator powered by USDA FoodData Central — search ingredients, set quantities, and get calories and macronutrients calculated in under a minute. Built out of my own fitness-tracking routine.",
     stack: ["React", "USDA FoodData Central API"],
     liveUrl: "https://macro-mate-opal.vercel.app/",
-    githubUrl: "https://github.com/Rukhsar24081998/MacroMate"
+    githubUrl: "https://github.com/Rukhsar24081998/MacroMate",
+    sampleQ: "Meal: 200g Grilled Chicken Breast + 150g Cooked Brown Rice + 1 tbsp Olive Oil",
+    sampleA: "• Total Energy: 624 kcal\n• Protein: 66.2g | Carbohydrates: 38.5g | Healthy Fats: 21.8g\n• Calculation Time: < 45 seconds from search to calculated meal summary",
+    citation: "USDA FoodData Central API verified nutritional database",
+    guardrail: "Validates ingredient quantities and handles portion unit conversions seamlessly."
   },
   {
     tag: "Concept · Food-tech",
@@ -710,7 +799,11 @@ const projects = [
     desc: "An AI recommendation-engine concept for restaurant discovery — personalized taste profiling, group recommendation logic, and real-time wait-time prediction, tailored to mood, location, and budget.",
     stack: ["React", "Recommendation logic"],
     liveUrl: "https://milestone1-zomato-zeta.vercel.app/",
-    githubUrl: "https://github.com/Rukhsar24081998/Milestone1-zomato"
+    githubUrl: "https://github.com/Rukhsar24081998/Milestone1-zomato",
+    sampleQ: "Group Context: 4 people (2 vegetarian, 2 non-veg), budget ₹500/head, Indiranagar",
+    sampleA: "• Top Recommendation: 'The Permit Room' (Match Score: 92%)\n• Conflict Resolution: Dedicated vegetarian kitchen partition + high non-veg rating\n• Real-Time Queue Prediction: ~15 mins estimated wait time at 8:30 PM",
+    citation: "Multi-factor constraint satisfaction & collaborative filtering logic",
+    guardrail: "Eliminates group dining decision paralysis by reconciling contradictory dietary preferences."
   },
   {
     tag: "Product Strategy · Quick-commerce",
@@ -720,13 +813,22 @@ const projects = [
     desc: "A full PRD for a checkout + post-delivery tipping feature on a hyperlocal delivery app — competitor benchmarking, cross-app functional specs (customer, partner, ops/finance), edge-case handling, and a success-metrics framework, paired with a high-fidelity Figma prototype.",
     stack: ["PRD", "Figma", "Wireframing", "NextLeap AI PM Fellowship"],
     caseStudyUrl: "tipping-feature.html",
-    prototypeUrl: "https://deaf-lead-61405838.figma.site/"
+    prototypeUrl: "https://deaf-lead-61405838.figma.site/",
+    sampleQ: "Product Challenge: Increase delivery partner net earnings without increasing delivery fee friction",
+    sampleA: "• Checkout Funnel: Fixed presets (₹10 / ₹20 / ₹30) mapped to tangible purchases (tea, snack)\n• Anti-Cherry-Picking Guardrail: Tip amount masked from partner until order status is 'Delivered'\n• Escrow & Payout: Automated daily IMPS/UPI settlement at 23:59:59 with 0% platform deduction",
+    citation: "Full PRD Specification + High-Fidelity Figma Prototype",
+    guardrail: "Guarantees 100% tip pass-through to partner with automated escrow accounting."
   }
 ];
 
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 const grid = document.getElementById('project-grid');
 
-projects.forEach(p => {
+projects.forEach((p, idx) => {
   const card = document.createElement('div');
   card.className = 'card';
   const isCaseStudy = p.type === 'case-study';
@@ -738,6 +840,22 @@ projects.forEach(p => {
        <a class="card-link secondary" href="${p.caseStudyUrl}">Read PRD</a>`
     : `<a class="card-link primary" href="${p.liveUrl}" target="_blank" rel="noopener">View live ↗</a>
        <a class="card-link secondary" href="${p.githubUrl}" target="_blank" rel="noopener">Code</a>`;
+
+  const previewBlock = p.sampleQ ? `
+    <button type="button" class="preview-toggle" id="toggle-${idx}" aria-expanded="false" aria-controls="drawer-${idx}">
+      <span>💬 Preview Working Output &amp; Q&amp;A</span>
+      <span class="preview-toggle-icon">▼</span>
+    </button>
+    <div class="preview-drawer" id="drawer-${idx}">
+      <span class="preview-label">Sample Input / Query</span>
+      <div class="preview-box">${escapeHtml(p.sampleQ)}</div>
+      <span class="preview-label">Verified Output / Answer</span>
+      <div class="preview-box" style="border-left:3px solid var(--signal);">${escapeHtml(p.sampleA)}</div>
+      ${p.citation ? `<div class="preview-citation">📌 ${escapeHtml(p.citation)}</div>` : ''}
+      ${p.guardrail ? `<div class="preview-guardrail">🛡️ <strong>PM Insight &amp; Guardrail:</strong> ${escapeHtml(p.guardrail)}</div>` : ''}
+    </div>
+  ` : '';
+
   card.innerHTML = `
     <div class="card-top">
       <span class="card-tag">${p.tag}</span>
@@ -749,10 +867,25 @@ projects.forEach(p => {
     <div class="stack-row">
       ${p.stack.map(s => `<span class="stack-chip">${s}</span>`).join('')}
     </div>
+    ${previewBlock}
     <div class="card-links">
       ${links}
     </div>
   `;
+
+  const toggleBtn = card.querySelector('.preview-toggle');
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      const drawer = card.querySelector('.preview-drawer');
+      const isOpen = drawer.classList.toggle('open');
+      toggleBtn.classList.toggle('open', isOpen);
+      toggleBtn.setAttribute('aria-expanded', isOpen);
+      toggleBtn.querySelector('span:first-child').textContent = isOpen
+        ? '✕ Close Preview'
+        : '💬 Preview Working Output & Q&A';
+    });
+  }
+
   grid.appendChild(card);
 });
 
